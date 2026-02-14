@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Owl Post for Orobola</title>
+    <title>For SNO Famakinwa</title>
     <style>
         :root {
             --parchment-bg: #e6d3a7;
@@ -15,29 +15,41 @@
         body {
             margin: 0;
             padding: 0;
-            background: #5b1b1c; 
+            background: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
             font-family: 'Georgia', serif;
+            color: white;
         }
 
-        /* Subtle Dark Magic Background */
-        .magic-layer {
+        /* Introduction & Countdown Styling */
+        #intro-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* background: radial-gradient(circle, #2a2a2a 0%, #000000 100%); */
-            background: #5b1b1c;
-            z-index: 1;
+            z-index: 100;
+            text-align: center;
+            width: 80%;
         }
 
-        /* Parchment Scroll Design */
+        #intro-text {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        #countdown {
+            font-size: 4rem;
+            color: var(--gold);
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(195, 155, 51, 0.6);
+        }
+
+        /* Parchment Scroll Design (Hidden initially) */
         #scroll-container {
+            display: none;
             position: relative;
             z-index: 10;
             width: 85%;
@@ -45,28 +57,19 @@
             min-height: 480px;
             background: var(--parchment-bg);
             background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png');
-            border-radius: 2px;
             padding: 45px 25px;
-            box-shadow: 
-                0 0 40px rgba(0,0,0,0.7),
-                inset 0 0 60px rgba(101, 67, 33, 0.3);
+            box-shadow: 0 0 40px rgba(0,0,0,0.7), inset 0 0 60px rgba(101, 67, 33, 0.3);
             border: 1px solid #5d4037;
             text-align: center;
-            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
         }
 
-        /* Hogwarts Logo */
         .hogwarts-crest {
             width: 80px;
-            height: 80px;
-            border-radius: 999999;
-            overflow: hidden;
             margin-bottom: 20px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         .question-text {
@@ -81,15 +84,6 @@
             justify-content: center;
         }
 
-        .progress {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #8d6e63;
-            position: absolute;
-            top: 20px;
-        }
-
         button {
             background: var(--burgundy);
             color: var(--gold);
@@ -100,43 +94,33 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             border-radius: 4px;
-            cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: 0.3s;
         }
 
-        button:active {
-            transform: scale(0.95);
-            background: #5a0001;
+        /* Animations */
+        .fade-out {
+            animation: fadeOut 1s forwards;
         }
 
-        /* Ink Reveal Animation */
-        .reveal {
-            animation: inkFade 1s ease-in-out forwards;
+        .fade-in {
+            animation: fadeIn 1.5s forwards;
         }
 
-        @keyframes inkFade {
-            from { opacity: 0; filter: blur(4px); }
-            to { opacity: 1; filter: blur(0); }
-        }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="magic-layer"></div>
+    <div id="intro-overlay">
+        <div id="intro-text">Hi, SNO Famakinwa, I have a few questions for you...</div>
+        <div id="countdown"></div>
+    </div>
 
     <div id="scroll-container">
-        <div class="progress" id="progress">SCARFACE</div>
-        
-        <img src="./Hogwarts.jpg" 
-             alt="Hogwarts Crest" 
-             class="hogwarts-crest">
-
-        <div class="question-text reveal" id="question">
-            Hi Orobola, I have a few lovely questions for you...
-        </div>
-        
-        <button onclick="nextQuestion()" id="btn">Begin Secret</button>
+        <img src="https://www.pngkit.com/png/full/41-419131_hogwarts-logo-png-hogwarts-crest-transparent-background.png" alt="Hogwarts Crest" class="hogwarts-crest">
+        <div class="question-text" id="question">Preparing the parchment...</div>
+        <button onclick="nextQuestion()" id="btn">Next Question →</button>
     </div>
 
     <script>
@@ -151,34 +135,50 @@
         ];
 
         let currentIdx = -1;
+        const countdownElement = document.getElementById('countdown');
+        const introOverlay = document.getElementById('intro-overlay');
+        const scrollContainer = document.getElementById('scroll-container');
+
+        // Initial Countdown Logic
+        let count = 5;
+        const timer = setInterval(() => {
+            if (count > 0) {
+                countdownElement.innerText = count;
+                count--;
+            } else {
+                clearInterval(timer);
+                startMagicalReveal();
+            }
+        }, 1000);
+
+        function startMagicalReveal() {
+            introOverlay.classList.add('fade-out');
+            setTimeout(() => {
+                introOverlay.style.display = 'none';
+                scrollContainer.style.display = 'flex';
+                scrollContainer.classList.add('fade-in');
+                nextQuestion(); // Show first question automatically
+            }, 1000);
+        }
 
         function nextQuestion() {
             const qElement = document.getElementById('question');
-            const pElement = document.getElementById('progress');
             const btn = document.getElementById('btn');
-            const container = document.getElementById('scroll-container');
-
-            // Reset animation
-            qElement.classList.remove('reveal');
-            void qElement.offsetWidth; 
-            qElement.classList.add('reveal');
 
             currentIdx++;
 
             if (currentIdx < questions.length) {
-                qElement.innerText = questions[currentIdx];
-                pElement.innerText = "Scroll No. " + (currentIdx + 1);
-                btn.innerText = "Next Question →";
+                // Flash animation for text change
+                qElement.style.opacity = 0;
+                setTimeout(() => {
+                    qElement.innerText = questions[currentIdx];
+                    qElement.style.opacity = 1;
+                }, 300);
             } else {
                 qElement.innerText = "You're amazing, Orobola. Mischief Managed. ❤️";
-                pElement.innerText = "The End";
                 btn.style.display = "none";
             }
         }
     </script>
 </body>
 </html>
-
-
-
-
