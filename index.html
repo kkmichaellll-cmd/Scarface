@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Owl Post for Orobola</title>
+    <style>
+        :root {
+            --parchment-bg: #e6d3a7;
+            --ink-color: #2c1e14;
+            --gold: #c39b33;
+            --burgundy: #740001;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #121212; /* Dark background to make the parchment pop */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Georgia', serif;
+        }
+
+        /* Floating Name Background */
+        .magic-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .floating-name {
+            position: absolute;
+            color: rgba(195, 155, 51, 0.2); /* Faint gold */
+            font-size: 1.2rem;
+            animation: float Up 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            from { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.5; }
+            to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Parchment Card Design */
+        #scroll-container {
+            position: relative;
+            z-index: 10;
+            width: 85%;
+            max-width: 360px;
+            min-height: 450px;
+            background: var(--parchment-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+            border-radius: 4px;
+            padding: 40px 30px;
+            box-shadow: 
+                0 0 30px rgba(0,0,0,0.5),
+                inset 0 0 50px rgba(101, 67, 33, 0.3);
+            border: 2px solid #5d4037;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Burnt edge effect */
+            mask-image: radial-gradient(circle at 50% 50%, black 90%, transparent 100%);
+        }
+
+        .wax-seal {
+            width: 65px;
+            height: 65px;
+            background: var(--burgundy);
+            border-radius: 50%;
+            border: 3px solid #500000;
+            color: var(--gold);
+            font-size: 2.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+            margin-bottom: 25px;
+            transform: rotate(-5deg);
+        }
+
+        .question-text {
+            color: var(--ink-color);
+            font-size: 1.4rem;
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 30px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+        }
+
+        .progress {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #8d6e63;
+            position: absolute;
+            top: 20px;
+        }
+
+        button {
+            background: var(--burgundy);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 12px 28px;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 2px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        button:active {
+            transform: scale(0.95) rotate(1deg);
+        }
+
+        /* Appearance Magic */
+        .reveal {
+            animation: inkFade 1.2s ease-in-out;
+        }
+
+        @keyframes inkFade {
+            from { opacity: 0; filter: blur(5px); transform: translateY(5px); }
+            to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="magic-layer" id="magic"></div>
+
+    <div id="scroll-container">
+        <div class="progress" id="progress">Ministry of Love</div>
+        <div class="wax-seal">O</div>
+        <div class="question-text reveal" id="question">
+            Hi Orobola, I have a few lovely questions for you...
+        </div>
+        <button onclick="nextQuestion()" id="btn">Reveal Secret</button>
+    </div>
+
+    <script>
+        // Generate floating "Orobola" background names
+        const magicLayer = document.getElementById('magic');
+        for (let i = 0; i < 15; i++) {
+            let name = document.createElement('div');
+            name.className = 'floating-name';
+            name.innerText = 'Orobola';
+            name.style.left = Math.random() * 100 + 'vw';
+            name.style.animationDuration = (Math.random() * 5 + 7) + 's';
+            name.style.animationDelay = (Math.random() * 8) + 's';
+            magicLayer.appendChild(name);
+        }
+
+        const questions = [
+            "What was your very first impression of me, Orobola?",
+            "If we could teleport anywhere in the world for a date right now, where would we go?",
+            "What is a small thing I do that makes you smile?",
+            "What is your favorite memory of us so far?",
+            "If you had to describe our 'vibe' in only three words, what would they be?",
+            "What is one thing you've always wanted to try but haven't yet?",
+            "Final question: Can I take you out again soon? ✨"
+        ];
+
+        let currentIdx = -1;
+
+        function nextQuestion() {
+            const qElement = document.getElementById('question');
+            const pElement = document.getElementById('progress');
+            const btn = document.getElementById('btn');
+            const container = document.getElementById('scroll-container');
+
+            // Re-trigger animation
+            qElement.classList.remove('reveal');
+            void qElement.offsetWidth; 
+            qElement.classList.add('reveal');
+
+            currentIdx++;
+
+            if (currentIdx < questions.length) {
+                qElement.innerText = questions[currentIdx];
+                pElement.innerText = "Scroll No. " + (currentIdx + 1);
+                btn.innerText = "Next Question →";
+            } else {
+                qElement.innerText = "You're amazing, Orobola. Mischief Managed. ❤️";
+                pElement.innerText = "The End";
+                btn.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
